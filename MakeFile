@@ -1,0 +1,30 @@
+# Use bash for compatibility with source
+SHELL := /bin/bash
+
+# Create virtual environment
+venv:
+	python3 -m venv venv
+	source venv/bin/activate
+
+# Install dependencies
+install:
+	venv/bin/pip install -r requirements.txt
+
+# Run the app
+run:
+	venv/bin/python src/main.py
+
+# Run tests
+test:
+	venv/bin/pytest tests/
+
+# Lint code
+lint:
+	venv/bin/flake8 src/ tests/
+
+# Format code
+format:
+	venv/bin/black src/ tests/
+
+# Setup everything
+setup: venv install

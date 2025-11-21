@@ -1,0 +1,6 @@
+pandas
+numpy
+scipy
+tabulate
+rapidfuzz
+openpyxl
