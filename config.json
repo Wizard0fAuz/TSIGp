@@ -1,0 +1,67 @@
+{
+    "app": {
+        "name": "WOS Scheduler",
+        "version": "1.0.0",
+        "description": "A scheduling application for optimizing SVS Prep schedules based on user-defined criteria."
+    },
+    "paths": {
+        "data": "responses/",
+        "output": "schedules/",
+        "modified_data": "sheets/modified/"
+        
+    },
+    "filenames": {
+        "input": "mock_schedule_data_extended.csv",
+        "data_sheet": 0,
+        "modified_data": "modified_schedule_data.csv"
+    },
+    "settings": {
+        "debug": true,
+        "days_of_week": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "max_print": 100,
+        "preserve_data": true,
+        "fuzzy_threshold": 80
+    },
+    "column_mapping": {
+        "Name": ["player", "in-game", "ign", "What is your in-game name?", "Chief name (Username)"],
+        "ID": ["player", "ID", "ign", "What is your player ID?", "Player ID"],
+        "mondayVP_time": ["monday", "available", "construaction", "times", "UTC", "What times are you available on Monday (Construction day)? (UTC time)"],
+        "tuesdayVP_time": ["tuesday", "available", "research", "times", "UTC", "What times are you available on Tuesday (Research day)? (UTC time) "],
+        "wednesdayME_time": ["wednesday", "available", "preliminary", "training", "times", "troops", "troop", "UTC", "What times are you available on Wednesday (Preliminary Training day)? (UTC time)"],
+        "thursdayME_time": ["thursday", "available", "Minister of Education", "MOE", "Education", "troop training day", "training", "times", "troops", "troop", "training", "UTC", "What times are you available on Thursday (Training day)? (UTC time)"],
+        "fridayVP_time": ["friday", "UTC", "time", "times", "day 5", "available", "What times are you available on Friday (Power Boost)? (UTC time)"],
+        "saturdayVP_time": ["saturday", "UTC", "time", "times", "day 5", "available", "Power Boost", "What times are you available on Saturday (Power Boost)? (UTC time)"],
+        "FC": ["FC", "fire crystals", "fire", "crystals", "how many fire crystals", "How many Fire Crystals do you plan on using during your appointment?"],
+        "RFC": ["How many Refined Fire Crystals do you plan on using during your appointment?", "refined", "fire", "crystals", "RFC"],
+        "FCS": ["How many Fire Crystal Shard do you intend to use during your appointment (on Tuesday)?", "fire", "crystal", "shard", "FCS", "how many fire crystal shards"],
+        "troop_lvl": ["troop", "level", "What is your maximum troop tier? ie T11 or T10", "maximum troop tier"],
+        "consttruction_speed": ["construction", "speed", "building", "acceleration", "minutes", "How many Speedups are you planning to use on construction day (during your appointment)? (In minutes)"],
+        "research_speed": ["research", "speed", "acceleration", "minutes", "How many Speedups are you planning to use on research day (during your appointment)? (In minutes)", "How many speedups are you planning to use on research day? (in minutes)"],
+        "troop_speed": ["troop", "training", "speed", "acceleration", "minutes", "How many Speedups are you planning to use on troop training day (during your appointment)? (In minutes)", "How many speedups will you use on Thursday (troop day)? (In minutes)"],
+        "preliminary?": ["Would you like a preliminary training appointment on Wednesday?", "preliminary", "training", "appointment", "Wednesday"],
+        "suplementry": ["Do you want to include supplementary appointments on Saturday?", "supplementary", "appointments", "Saturday", "If you are not assigned a position on Monday, Tuesday or Thursday, would you like a Vice President appointment during Day V (Power Boost)?", "VP appointment", "day V", "day 5"],
+        "completion_time": ["completion time", "completion", "completion"]
+    },
+    "required_columns": [
+        "Name",
+        "ID",
+        "mondayVP_time",
+        "tuesdayVP_time",
+        "wednesdayME_time",
+        "thursdayME_time",
+        "fridayVP_time",
+        "saturdayVP_time",
+        "FC",
+        "RFC",
+        "FCS",
+        "troop_lvl",
+        "consttruction_speed",
+        "research_speed",
+        "troop_speed",
+        "preliminary?",
+        "suplementry",
+        "completion_time"
+    ]
+
+
+}
