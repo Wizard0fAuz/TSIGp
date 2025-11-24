@@ -8,3 +8,24 @@ schedules/
 .vscode/
 logs/
 event_time/
+
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual envs
+venv/
+.env/
+.env*
+
+# Editor/temp files
+.DS_Store
+*.swp
+.idea/
+.vscode/
+Thumbs.db
+*.log
+EOF
