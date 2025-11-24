@@ -18,12 +18,14 @@ with open('config.json', 'r') as f:
 data_path = Path(config['paths']['data'] / config['filenames']['input'])
 output_path = Path(config['paths']['output'])
 
+with open('static_data/troops.json', 'r') as t:
+    troops = json.load(t)
+
 
 
 def get_data() -> pd.DataFrame:
-    # Validate config structure
+    # Validate config structure11
     required_keys = ['paths', 'filenames', 'column_mapping', 'settings']
-
     for key in required_keys:
         if key not in config:
             raise KeyError(f"Missing '{key}' in config.")
@@ -99,15 +101,117 @@ def construction_data(data: pd.DataFrame) -> pd.DataFrame:
     data['Points'] = data["RFC"] * 30000 + data['FC'] * 2000 + data["ConstructionSpeed"] * 24 * 60 * 30
     filtered = data[data['Points'] > 0][['Name', 'ID', 'ConstructionTimes', 'Points']]
     return filtered
+
 def research_data(data: pd.DataFrame) -> pd.DataFrame:
     data['Points'] = data['FCS'] * 1000 + data["ResearchSpeed"] * 24 * 60 * 30
     filtered = data[data['Points'] > 0][['Name', 'ID', 'ResearchTimes', 'Points']]
     return filtered
 
+# TODO: find best way to get troop data. potentially enter each type of troop with their current and then desired level
+
+
+def promotion_errors(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Finds the players who have inncorrectly entered their troop data and information.
+    If player has entered the promotion data in the wrong order, their data will not be included in valid players.
+    They will not be considered for troop promotion points.
+    
+    Inputs: data - pd.DataFrame
+    
+    Returns: (error_players, valid_players) -> data frames
+    - error_players: the players who entered data inccorectly or not at all ie. not promoting*
+    - valid_players: players with data correctly entered 
+    
+    
+    """
+    # TODO: * find a better way to have the error of players who did want to promote only
+    
+	# points mapping for the troop levels
+    data['points_high'] = data["promo_high"].map(troops["points"]).fillna(0)
+    data['points_low'] = data["promo_low"].map(troops["points"]).fillna(0)
+    
+	# point difference calc
+    data['point_diff'] = data['points_high'] - data['points_low']
+    
+   # defining and filtering for the error condition
+    error_mask = data['point_diff']<=0
+    error_players = data.loc[error_mask, data['Name', 'ID', 'promo_high', 'promo_low', 'troop_bonus', 'promo_no', 'point_diff', 'troop_speed', 'troop_lv']]
+    valid_players = data.loc[~error_mask, data['Name', 'ID', 'promo_high', 'promo_low', 'troop_bonus', 'promo_no', 'point_diff', 'troop_speed', 'troop_lv']]
+    return error_players, valid_players
+
+# TODO: have an option to list of players that entered the incorrect data
+
+
+def promos(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    valid_players = promotion_errors(data)[1]
+
+	# Checking for enough speedups
+    
+    time_map = troops["base_time"] # time map for each troop tier
+    
+	# point mapping for each troop level
+    valid_players['high_time'] = valid_players['promo_high'].map(time_map)
+    valid_players['low_time'] = valid_players['promo_low'].map(time_map)
+    
+	# finding the adjusted time and accounting for troop training bonuses 
+    valid_players['adj_time_promo'] = (valid_players['high_time'] - valid_players['low_time'])/(1+(valid_players['troop_bonus']/100))
+    
+    # time required to promote the listed number of troops
+    valid_players['total_time_promo'] = valid_players['adj_time_promo'] * valid_players['promo_no']
+    
+	# Separates the player who have enough speedups to cover all the promototions with those who do not have enough
+    partial_points = valid_players.loc[valid_players['troop_speed'] < valid_players['total_time_promo']]
+    full_points = valid_players.loc[valid_players['troop_speed'] >= valid_players['total_time_promo']]
+    
+	# partial points calculation accounts for only the no. of troop speed availiable
+    partial_points['promo_points'] = partial_points['troop_speed']*partial_points['adj_time_promo']*partial_points['point_diff']
+    
+	# full points 
+    full_points['promo_points'] = full_points['point_diff']*full_points['promo_no']
+    full_points['troop_speed'] = full_points['troop_speed'] - full_points['total_time_promo']
+    
+    return partial_points, full_points
+    
+
+def training(data: pd.DataFrame) -> pd.DataFrame:
+    valid = promos(data)[1]
+    valid['training_points'
+
+
+
+
 def troop_data(data: pd.DataFrame) -> pd.DataFrame:
-    data['Points'] = data["TroopSpeed"] * 24 * 60 * 30
-    filtered = data[data['Points'] > 0][['Name', 'ID', 'TroopTimes', 'Points']]
-    return filtered
+    troop_consideration = data[data['troop_speed']>0] # players with more than 0 troop speed if nessecary
+    # promotions points
+    data['promo_high'] = data["promo_high"].map(troops["points"]).fillna(0)
+    data['promo_low'] = data["promo_low"].map(troops["points"]).fillna(0)
+
+    # promotion time w/ no bonus (base time taken to promote 1 troop between the specified levels)
+    data['high_time'] = data["promo_high"].map(troops["time"]).fillna(0)
+    data['low_time'] = data["promo_low"].map(troops["time"]).fillna(0)
+    
+	# time for one promotion including bonus
+    data['promo_time_w_bonus'] = (data['high_time'] - data['low_time'])/(1+(data['troop_bonus']/100))
+    
+    # with the remaining speedups this is for the troop training point calculation
+
+    time_promo = data['promo_time_w_speed'] * data['promo_no']
+    data['current_speed'] = data['troop_speed'].to_numpy()
+    current_speed -= time_promo
+    
+	leftover_speed = 
+        
+    
+
+
+    data['training_points'] = data['troop_lv'].map(troops["points"]).fillna(0)
+    data['base_time'] = data['troop_lv'].map(troops["base_time"]).fillna(0)
+    data['time_per_troop'] = data['base_time'] / (1 + (data['troop_bonus'] / 100))
+    ppm = data['training_points'] / data['time_per_troop']
+    data['training_points'] = ppm * current_speed
+
+    return #filtered
+
 
 def optimize_schedule(data: pd.DataFrame, time_column: str, points_column: str = 'Points', top_n: int = 100) -> pd.DataFrame:
     candidates = data.sort_values(by=points_column, ascending=False).head(top_n).copy()

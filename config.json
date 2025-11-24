@@ -1,11 +1,11 @@
 {
     "app": {
         "name": "WOS Scheduler",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "description": "A scheduling application for optimizing SVS Prep schedules based on user-defined criteria."
     },
     "paths": {
-        "data": "responses/",
+        "data": "sheets/",
         "output": "schedules/",
         "modified_data": "sheets/modified/"
         
@@ -40,7 +40,15 @@
         "troop_speed": ["troop", "training", "speed", "acceleration", "minutes", "How many Speedups are you planning to use on troop training day (during your appointment)? (In minutes)", "How many speedups will you use on Thursday (troop day)? (In minutes)"],
         "preliminary?": ["Would you like a preliminary training appointment on Wednesday?", "preliminary", "training", "appointment", "Wednesday"],
         "suplementry": ["Do you want to include supplementary appointments on Saturday?", "supplementary", "appointments", "Saturday", "If you are not assigned a position on Monday, Tuesday or Thursday, would you like a Vice President appointment during Day V (Power Boost)?", "VP appointment", "day V", "day 5"],
-        "completion_time": ["completion time", "completion", "completion"]
+        "completion_time": ["completion time", "completion", "completion"],
+        "troop_bonus": ["troop", "bonus", "additional", "points", "What is your total troop training bonus (in points)?"],
+        "troop_lv": ["Please select the troop level you plan on training.", "troop", "level", "training"],
+        "promo_low": ["Please select the level of troop you will promote.", "promote", "troop", "level", "low"],
+        "promo_high": ["Please select the level you will promote your troops to.", "promote", "troop", "level", "high"],
+        "promo_no": ["Please enter the number of troops at the level selected above that you plan on promoting.", "number", "troops", "promote", "no.", "how many troops do you plan on promoting", "?"]
+
+
+
     },
     "required_columns": [
         "Name",
@@ -60,7 +68,12 @@
         "troop_speed",
         "preliminary?",
         "suplementry",
-        "completion_time"
+        "completion_time",
+        "troop_bonus",
+        "troop_lv",
+        "promo_low",
+        "promo_high",
+        "promo_no"
     ]
 
 
