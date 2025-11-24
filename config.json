@@ -1,14 +1,18 @@
 {
     "app": {
-        "name": "WOS Scheduler",
+        "name": "TSIGp",
         "version": "2.0.0",
         "description": "A scheduling application for optimizing SVS Prep schedules based on user-defined criteria."
     },
     "paths": {
         "data": "sheets/",
         "output": "schedules/",
-        "modified_data": "sheets/modified/"
-        
+        "modified_data": "sheets/modified/",
+		"prep_images": "responses/ss/",
+		"base_input_dir": "past_scores_inp",
+        "base_output_dir": "past_records",
+        "tesseract_cmd": "",
+        "log_dir": "logs"
     },
     "filenames": {
         "input": "mock_schedule_data_extended.csv",
@@ -21,7 +25,33 @@
         "max_print": 100,
         "preserve_data": true,
         "fuzzy_threshold": 80
+      },
+  "files": {
+		"image_extensions": [".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff", ".heic"],
+		"csv_header": ["Tag", "Name", "PointsRaw", "PointsNumeric", "SourceImage"]
+  },
+  "ocr": {
+    	"languages": "eng+kor+jpn",  
+    	"preprocess": {
+			"grayscale": true,
+			"threshold": true,
+			"threshold_value": 150
     },
+    "retry_with_preprocessing": true
+  },
+  "naming": {
+		"folder_pattern": "event_dateRange",  
+    	"date_range_delimiter": "_",          
+   		"csv_name_format": "{date_range}.csv" 
+  },
+  "event_mapping": {
+	"canonical_events": {
+    	"Alliance Showdown": ["AS", "All Show", "Showdown", "Alliance SD"],
+    	"State Personal Ranking": ["SPR", "State Rank", "Personal Ranking", "State PR"],
+    	"Power Sprint": ["PS", "Sprint", "PowerSp", "PwSprint"]
+	},
+    "min_similarity": 80
+  },
     "column_mapping": {
         "Name": ["player", "in-game", "ign", "What is your in-game name?", "Chief name (Username)"],
         "ID": ["player", "ID", "ign", "What is your player ID?", "Player ID"],

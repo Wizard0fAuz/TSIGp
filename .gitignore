@@ -2,6 +2,8 @@ venv/
 __pycache__/
 *.pyc
 .DS_Store
-note_dev/
+note_to_self/
 responses/
 schedules/
+.vscode/
+logs/

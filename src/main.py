@@ -175,7 +175,7 @@ def promos(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 def training(data: pd.DataFrame) -> pd.DataFrame:
     valid = promos(data)[1]
-    valid['training_points'
+   
 
 
 
